@@ -47,6 +47,23 @@ body{
     inset 8px 8px 20px rgba(255,255,255,0.6),
     0 20px 30px rgba(0,0,0,0.25);
   animation:floatUp linear infinite, sway 4s ease-in-out infinite;
+  z-index: 1;
+}
+.message-box{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: .4s;
+  z-index: 10; /* 👈 EKLE */
+}
+.message-box.active{
+  opacity:1;
+  pointer-events:auto;
 }
 .balloon::after{
   content:"";
@@ -78,6 +95,8 @@ body{
   text-align:center;
   box-shadow:0 30px 60px rgba(0,0,0,.35);
   animation:scaleIn .5s ease
+  position: relative;
+  z-index: 20; /* 👈 EN ÜST */
 }
 @keyframes scaleIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 .close{margin-top:22px;padding:10px 22px;border:none;border-radius:999px;background:#ff6b6b;color:white;cursor:pointer}
@@ -89,6 +108,28 @@ body{
   font-size:12px;
   opacity:.55
 }
+/* Patlama ışığı */
+.burst{
+  position:absolute;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,0));
+  animation:burst .6s ease-out forwards;
+  pointer-events:none;
+}
+
+@keyframes burst{
+  from{
+    transform:scale(1);
+    opacity:1;
+  }
+  to{
+    transform:scale(6);
+    opacity:0;
+  }
+}
+
 
 .heart{position:absolute;pointer-events:none;animation:heart .9s ease forwards}
 @keyframes heart{from{opacity:1;transform:translate(0,0)}to{opacity:0;transform:translate(var(--x),var(--y))}}
@@ -199,6 +240,13 @@ for(let i=0;i<6;i++){
   b.style.animationDuration=15+Math.random()*10+'s';
   document.body.appendChild(b);
 }
+const burst = document.createElement('div');
+burst.className = 'burst';
+burst.style.left = b.offsetLeft + b.offsetWidth/2 + 'px';
+burst.style.top  = b.offsetTop + b.offsetHeight/2 + 'px';
+document.body.appendChild(burst);
+setTimeout(()=>burst.remove(),600);
+
 </script>
 
 </body>
